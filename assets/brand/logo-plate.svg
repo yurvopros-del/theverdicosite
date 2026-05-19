@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 60" role="img" aria-label="Verdi &amp; Co.">
+  <defs>
+    <linearGradient id="plate-h" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a7fdc"/>
+      <stop offset="55%" stop-color="#1f4fbf"/>
+      <stop offset="100%" stop-color="#15409e"/>
+    </linearGradient>
+    <linearGradient id="plate-h-shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.30"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="med-h" cx="40%" cy="32%" r="75%">
+      <stop offset="0%" stop-color="#6a98e8"/>
+      <stop offset="55%" stop-color="#2356c4"/>
+      <stop offset="100%" stop-color="#0e3691"/>
+    </radialGradient>
+  </defs>
+  <rect x="2" y="8" width="376" height="44" rx="6" fill="url(#plate-h)"/>
+  <rect x="2" y="8" width="376" height="44" rx="6" fill="url(#plate-h-shine)"/>
+  <rect x="3.5" y="9.5" width="373" height="41" rx="5" fill="none" stroke="#ffffff" stroke-width="0.55" opacity="0.35"/>
+  <circle cx="40" cy="30" r="18" fill="#ffffff"/>
+  <circle cx="40" cy="30" r="15" fill="url(#med-h)"/>
+  <path d="M 32 22 L 40 39 L 48 22 L 44.5 22 L 40 33 L 35.5 22 Z" fill="#ffffff"/>
+  <line x1="68" y1="18" x2="68" y2="42" stroke="#ffffff" stroke-width="0.6" opacity="0.55"/>
+  <text x="80" y="40" font-family="Georgia, 'Times New Roman', serif" font-size="26" fill="#ffffff">Verdi &amp; Co.</text>
+</svg>
