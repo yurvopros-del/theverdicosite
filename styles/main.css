@@ -916,7 +916,12 @@ h1 {
   }
 
   .principles-list__number {
-    min-width: 16px;
-    font-size: 20px;
-  }
+  display: block;
+  min-width: 20px;
+  color: #2f5fd7;
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
