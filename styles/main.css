@@ -764,3 +764,46 @@ h1 {
   opacity: 1;
   pointer-events: none;
 }
+
+
+/* Verdico Principles hero video: watch background behind title only. */
+.hero--principles-video {
+  color: #ffffff;
+  background: #07172f;
+}
+
+.hero--principles-video .hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero--principles-video .eyebrow {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.hero--principles-video h1 {
+  color: #ffffff;
+  text-shadow: 0 22px 72px rgba(0, 0, 0, 0.38);
+}
+
+.hero--principles-video::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(4, 17, 39, 0.74) 0%,
+      rgba(4, 17, 39, 0.5) 42%,
+      rgba(4, 17, 39, 0.2) 76%,
+      rgba(4, 17, 39, 0.1) 100%
+    );
+}
+
+.hero--principles-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 72% 28%, rgba(255, 255, 255, 0.1), transparent 32%),
+    linear-gradient(180deg, rgba(6, 22, 48, 0.12) 0%, rgba(6, 22, 48, 0.04) 48%, rgba(6, 22, 48, 0.28) 100%);
+}
