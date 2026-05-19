@@ -31,4 +31,81 @@
   }, { threshold: 0.12 });
 
   revealItems.forEach(function (el) { observer.observe(el); });
+  var heroVideos = document.querySelectorAll(".hero-media");
+
+  function activateHeroVideo(video) {
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+
+    try {
+      var playAttempt = video.play();
+      if (playAttempt && typeof playAttempt.catch === "function") {
+        playAttempt.catch(function () {
+          video.controls = false;
+        });
+      }
+    } catch (error) {
+      video.controls = false;
+    }
+  }
+
+  heroVideos.forEach(function (video) {
+    activateHeroVideo(video);
+
+    video.addEventListener("loadeddata", function () {
+      activateHeroVideo(video);
+    }, { once: true });
+
+    video.addEventListener("canplay", function () {
+      activateHeroVideo(video);
+    }, { once: true });
+
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden && video.paused) {
+        activateHeroVideo(video);
+      }
+    });
+  });
+})();
+
+/* Verdico hero video runtime: prove and start page-embedded hero videos. */
+(function () {
+  function startVerdicoHeroVideos() {
+    var videos = document.querySelectorAll(".hero-media video, .hero--with-video video");
+
+    videos.forEach(function (video) {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.autoplay = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.setAttribute("muted", "");
+      video.setAttribute("autoplay", "");
+      video.setAttribute("loop", "");
+      video.setAttribute("playsinline", "");
+      video.setAttribute("preload", "auto");
+
+      try {
+        var result = video.play();
+        if (result && typeof result.catch === "function") {
+          result.catch(function () {});
+        }
+      } catch (e) {}
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", startVerdicoHeroVideos);
+  } else {
+    startVerdicoHeroVideos();
+  }
+
+  window.addEventListener("pageshow", startVerdicoHeroVideos);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) startVerdicoHeroVideos();
+  });
+  document.addEventListener("pointerdown", startVerdicoHeroVideos, { once: true });
 })();

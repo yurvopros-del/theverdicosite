@@ -218,6 +218,45 @@ video {
   pointer-events: none;
 }
 
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.hero--with-video::before {
+  opacity: .28;
+}
+
+.hero--home.hero--with-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(4,20,52,.94), rgba(7,47,111,.72) 52%, rgba(14,67,145,.46)),
+    radial-gradient(circle at 78% 38%, rgba(255,255,255,.15), transparent 34%);
+  pointer-events: none;
+}
+
+.hero--home .hero-media {
+  opacity: .48;
+}
+
+.hero--energy .hero-media {
+  opacity: .56;
+}
+
+.hero--with-video .hero-content {
+  position: relative;
+  z-index: 2;
+}
+
 .hero--energy {
   --hero-image:
     radial-gradient(circle at 78% 30%, rgba(255,255,255,.22), transparent 26%),
@@ -648,4 +687,80 @@ h1 {
   .site-nav {
     transition: none;
   }
+}
+
+/* Verdico media runtime fix: video must be the moving hero layer, not a poster/background substitute. */
+.hero--with-video {
+  overflow: hidden;
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  background: #07172f;
+}
+
+.hero-media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-media img,
+.hero-media picture,
+.hero-media .poster,
+.hero-media .hero-poster {
+  display: none;
+}
+
+.hero--with-video .hero-content,
+.hero--with-video .hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.hero--with-video::before {
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Verdico video clarity pass: preserve text contrast while letting the moving video breathe. */
+.hero--with-video .hero-media video,
+.hero-media video.hero-video {
+  opacity: 1;
+  filter: saturate(1.14) contrast(1.08) brightness(1.1);
+}
+
+.hero--with-video::before {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(4, 17, 39, 0.58) 0%,
+      rgba(4, 17, 39, 0.34) 38%,
+      rgba(4, 17, 39, 0.14) 72%,
+      rgba(4, 17, 39, 0.08) 100%
+    );
+}
+
+.hero--with-video::after,
+.hero--home.hero--with-video::after {
+  background:
+    radial-gradient(circle at 72% 30%, rgba(255, 255, 255, 0.12), transparent 34%),
+    linear-gradient(
+      180deg,
+      rgba(6, 22, 48, 0.18) 0%,
+      rgba(6, 22, 48, 0.08) 48%,
+      rgba(6, 22, 48, 0.26) 100%
+    );
+  opacity: 1;
+  pointer-events: none;
 }
