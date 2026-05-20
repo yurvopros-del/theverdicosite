@@ -149,3 +149,47 @@
     }
   });
 })();
+
+/* Verdico Energy footprint controls: production owner. */
+(function () {
+  var buttons = document.querySelectorAll("[data-energy-region]");
+  if (!buttons.length) return;
+
+  var shell = document.querySelector(".energy-globe-shell");
+  var panel = document.querySelector(".energy-region-focus");
+  var rubric = panel && panel.querySelector(".energy-region-focus__rubric");
+  var nameEl = panel && panel.querySelector(".energy-region-focus__name");
+  var bodyEl = panel && panel.querySelector(".energy-region-focus__body");
+  if (!shell || !panel || !nameEl || !bodyEl) return;
+
+  var regions = {
+    europe: { name: "Europe", body: "Renewable power, storage and digital infrastructure origination." },
+    latam: { name: "LATAM", body: "Energy and data-centre related opportunities across selected markets." },
+    us: { name: "United States", body: "Data-centre and digital infrastructure capital alignment." },
+    apac: { name: "APAC", body: "Expansion interest across power-led digital infrastructure." },
+    emea: { name: "EMEA", body: "Core advisory corridor across power, capital and digital infrastructure." },
+    poland: { name: "Poland", body: "Active expansion interest across power and data-centre infrastructure." },
+    france: { name: "France", body: "Active expansion interest across energy and digital infrastructure." }
+  };
+
+  function activate(region) {
+    var data = regions[region];
+    if (!data) return;
+    buttons.forEach(function (btn) {
+      var on = btn.dataset.energyRegion === region;
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    shell.setAttribute("data-active-region", region);
+    shell.classList.add("is-focusing");
+    panel.classList.add("is-active");
+    if (rubric) rubric.textContent = "Active focus";
+    nameEl.textContent = data.name;
+    bodyEl.textContent = data.body;
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      activate(btn.dataset.energyRegion);
+    });
+  });
+})();
