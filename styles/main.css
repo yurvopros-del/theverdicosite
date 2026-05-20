@@ -995,14 +995,15 @@ h1 {
   }
 
   .principles-list__number {
-  display: block;
-  min-width: 20px;
-  color: #2f5fd7;
-  font-family: var(--font-serif);
-  font-size: 24px;
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.02em;
+    display: block;
+    min-width: 20px;
+    color: #2f5fd7;
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
 }
 
 .hero--home .hero-stats {
@@ -1090,8 +1091,8 @@ h1 {
   opacity: 0.9;
   transform: translateY(0);
   transition:
-    opacity 420ms ease,
-    transform 520ms cubic-bezier(.2, .78, .22, 1);
+    opacity 620ms ease,
+    transform 760ms cubic-bezier(.2, .78, .22, 1);
 }
 
 .footer-linkedin__symbol {
@@ -1114,12 +1115,54 @@ h1 {
   letter-spacing: -0.06em;
   text-transform: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
   transform: translateY(0.5px);
+  transition:
+    opacity 560ms ease 90ms,
+    clip-path 760ms cubic-bezier(.2, .78, .22, 1) 90ms,
+    transform 760ms cubic-bezier(.2, .78, .22, 1) 90ms;
 }
 
 .footer-linkedin__text {
   display: inline-block;
   opacity: 0.9;
+  transform: translateX(0);
+  transition:
+    opacity 560ms ease 160ms,
+    transform 680ms cubic-bezier(.2, .78, .22, 1) 160ms;
+}
+
+.js .footer-linkedin {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.js .footer-linkedin .footer-linkedin__symbol {
+  opacity: 0;
+  clip-path: inset(100% 0 0 0);
+  transform: translateY(3px);
+}
+
+.js .footer-linkedin .footer-linkedin__text {
+  opacity: 0;
+  transform: translateX(-2px);
+}
+
+.js .footer-linkedin.is-visible {
+  opacity: 0.9;
+  transform: translateY(0);
+}
+
+.js .footer-linkedin.is-visible .footer-linkedin__symbol {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  transform: translateY(0.5px);
+}
+
+.js .footer-linkedin.is-visible .footer-linkedin__text {
+  opacity: 0.9;
+  transform: translateX(0);
 }
 
 .footer-linkedin:hover,
@@ -1128,9 +1171,21 @@ h1 {
   transform: translateY(-1px);
 }
 
+.footer-linkedin:hover .footer-linkedin__text,
+.footer-linkedin:focus-visible .footer-linkedin__text {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .footer-linkedin {
+  .footer-linkedin,
+  .footer-linkedin__symbol,
+  .footer-linkedin__text,
+  .js .footer-linkedin,
+  .js .footer-linkedin .footer-linkedin__symbol,
+  .js .footer-linkedin .footer-linkedin__text {
     transition: none;
     transform: none;
+    clip-path: none;
+    opacity: 1;
   }
 }

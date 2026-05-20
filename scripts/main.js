@@ -109,3 +109,43 @@
   });
   document.addEventListener("pointerdown", startVerdicoHeroVideos, { once: true });
 })();
+
+/* Verdico footer LinkedIn reveal observer: production owner. */
+(() => {
+  document.documentElement.classList.add("js");
+
+  const links = Array.from(document.querySelectorAll(".footer-linkedin"));
+  if (!links.length) return;
+
+  const reveal = (link) => {
+    link.classList.add("is-visible");
+  };
+
+  if (!("IntersectionObserver" in window)) {
+    links.forEach(reveal);
+    return;
+  }
+
+  const viewportHeight = () =>
+    window.innerHeight || document.documentElement.clientHeight || 0;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      reveal(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, {
+    threshold: 0.35,
+    rootMargin: "0px 0px -6% 0px"
+  });
+
+  links.forEach((link) => {
+    const rect = link.getBoundingClientRect();
+    if (rect.top < viewportHeight() && rect.bottom > 0) {
+      reveal(link);
+    } else {
+      observer.observe(link);
+    }
+  });
+})();
