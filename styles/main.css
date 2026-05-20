@@ -1078,3 +1078,59 @@ h1 {
   }
 }
 
+/* Verdico footer LinkedIn soft reveal: production owner. */
+.footer-linkedin {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 5px;
+  width: max-content;
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1;
+  opacity: 0.9;
+  transform: translateY(0);
+  transition:
+    opacity 420ms ease,
+    transform 520ms cubic-bezier(.2, .78, .22, 1);
+}
+
+.footer-linkedin__symbol {
+  display: inline-grid !important;
+  place-items: center;
+  width: 10px !important;
+  height: 10px !important;
+  min-width: 10px !important;
+  max-width: 10px !important;
+  min-height: 10px !important;
+  max-height: 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.94);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 6.5px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  text-transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+  transform: translateY(0.5px);
+}
+
+.footer-linkedin__text {
+  display: inline-block;
+  opacity: 0.9;
+}
+
+.footer-linkedin:hover,
+.footer-linkedin:focus-visible {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-linkedin {
+    transition: none;
+    transform: none;
+  }
+}
