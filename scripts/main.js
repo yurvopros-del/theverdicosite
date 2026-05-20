@@ -193,3 +193,57 @@
     });
   });
 })();
+
+/* Verdico Real Estate hero slider: production owner. */
+(function () {
+  var slides = document.querySelectorAll(".hero--realestate .hero-slide");
+  if (!slides.length) return;
+
+  var total = slides.length;
+  var current = 0;
+  var INTERVAL = 5200;
+  var timer = null;
+
+  /* Lazy-load slides 2–10 via data-src */
+  slides.forEach(function (slide, i) {
+    if (i === 0) return;
+    var src = slide.dataset.src;
+    if (!src) return;
+    var img = new Image();
+    img.onload = function () {
+      slide.style.backgroundImage = "url('" + src + "')";
+    };
+    img.src = src;
+  });
+
+  function goTo(idx) {
+    slides[current].classList.remove("is-active");
+    current = ((idx % total) + total) % total;
+    slides[current].classList.add("is-active");
+  }
+
+  function tick() { goTo(current + 1); }
+
+  function start() {
+    if (timer) return;
+    timer = setInterval(tick, INTERVAL);
+  }
+
+  function stop() {
+    clearInterval(timer);
+    timer = null;
+  }
+
+  /* Respect prefers-reduced-motion: hold first slide */
+  var mq = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (mq && mq.matches) return;
+
+  start();
+
+  /* Pause on hover */
+  var section = document.querySelector(".hero--realestate");
+  if (section) {
+    section.addEventListener("mouseenter", stop);
+    section.addEventListener("mouseleave", start);
+  }
+})();

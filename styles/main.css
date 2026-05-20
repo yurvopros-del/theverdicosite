@@ -1583,3 +1583,106 @@ h1 {
     transform: none;
   }
 }
+
+/* Verdico Contact page: image hero with refined atmospheric overlay and elegant email reach. */
+.hero--contact {
+  --hero-image: url("../assets/images/contactpage.avif");
+}
+
+.hero--contact::after {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(4, 17, 39, 0.46) 0%,
+      rgba(4, 17, 39, 0.16) 44%,
+      rgba(4, 17, 39, 0.62) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(4, 17, 39, 0.42) 0%,
+      rgba(4, 17, 39, 0.10) 52%,
+      rgba(4, 17, 39, 0.06) 100%
+    ),
+    radial-gradient(circle at 58% 36%, rgba(255, 255, 255, 0.07), transparent 38%);
+}
+
+.contact-reach {
+  margin-top: 42px;
+  padding-top: 26px;
+  border-top: 1px solid rgba(7, 23, 47, 0.10);
+}
+
+.contact-reach__email {
+  font-family: var(--font-serif);
+  font-size: clamp(17px, 1.22vw, 20px);
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  transition: color 0.22s ease;
+}
+
+.contact-reach__email:hover,
+.contact-reach__email:focus-visible {
+  color: var(--blue-mid);
+}
+
+/* =====================================================================
+   Verdico Real Estate hero slider: production owner.
+   ===================================================================== */
+
+/* Remove static ::before image — replaced by .hero-slider */
+.hero--realestate {
+  --hero-image: none;
+}
+
+/* Ensure the ::after dark-gradient veil sits above the slides */
+.hero--realestate::after {
+  z-index: 1;
+}
+
+/* Hero content floats above veil */
+.hero--with-slider .hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Slider container — same footprint as .hero-media */
+.hero-slider {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Individual slides */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background: center / cover no-repeat;
+  opacity: 0;
+  transition: opacity 1.6s ease-in-out;
+  will-change: opacity, transform;
+  transform: scale(1.04);
+}
+
+.hero-slide.is-active {
+  opacity: 1;
+  animation: rs-drift 9s ease-out forwards;
+}
+
+@keyframes rs-drift {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1.0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide {
+    transition: none;
+    animation: none;
+    transform: none;
+  }
+  .hero-slide.is-active {
+    animation: none;
+    transform: none;
+  }
+}
