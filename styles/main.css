@@ -86,8 +86,8 @@ video {
 
 .brand-plate--svg-img {
   display: inline-flex;
-  width: 190px;
-  height: 30px;
+  width: 222px;
+  height: 35px;
   padding: 0;
   margin: 0;
   border: 0;
@@ -706,8 +706,8 @@ h1 {
   }
 
   .brand-plate--svg-img {
-    width: 156px;
-    height: 25px;
+    width: 182px;
+    height: 29px;
   }
 
   .nav-toggle {
@@ -1648,6 +1648,33 @@ h1 {
 .contact-reach__email:hover,
 .contact-reach__email:focus-visible {
   color: var(--blue-mid);
+}
+
+.contact-icons {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.contact-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.72;
+  transition: opacity 0.22s ease;
+}
+
+.contact-icon-link:hover,
+.contact-icon-link:focus-visible {
+  opacity: 1;
+}
+
+.contact-icon-link img {
+  display: block;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
 }
 
 /* =====================================================================
