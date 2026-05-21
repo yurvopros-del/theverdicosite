@@ -1710,3 +1710,45 @@ h1 {
     transform: none;
   }
 }
+
+/* =====================================================================
+   Footer legal links — three-link row in footer-bottom
+   ===================================================================== */
+
+.footer-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.footer-legal-links a + a::before {
+  content: "·";
+  margin: 0 9px;
+  color: rgba(255,255,255,.32);
+}
+
+/* =====================================================================
+   Legal / Policy pages — section sub-headings and date stamp
+   ===================================================================== */
+
+.legal-section-head {
+  margin: 34px 0 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.legal-section-head:first-child {
+  margin-top: 0;
+}
+
+.legal-date {
+  display: block;
+  margin-bottom: 32px;
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: rgba(9, 24, 48, 0.40);
+}
