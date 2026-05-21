@@ -383,9 +383,11 @@ video {
   font-weight: 700;
 }
 
-.hero--visual .eyebrow,
-.hero--home .eyebrow {
+.hero--visual .eyebrow {
   color: rgba(255,255,255,.76);
+}
+.hero--home .eyebrow {
+  color: var(--gold);
 }
 
 h1,
