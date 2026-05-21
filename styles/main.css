@@ -112,9 +112,9 @@ video {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(24px, 3.45vw, 54px);
+  gap: clamp(12px, 1.8vw, 34px);
   min-height: 38px;
-  padding: 0 clamp(62px, 5.6vw, 92px) 0 0;
+  padding: 0 clamp(24px, 2.5vw, 48px) 0 0;
 }
 
 .site-nav a {
@@ -124,10 +124,11 @@ video {
   min-height: 38px;
   color: var(--ink);
   font-family: var(--font-serif);
-  font-size: clamp(14px, .95vw, 17px);
+  font-size: clamp(13px, .88vw, 16px);
   line-height: 1;
   letter-spacing: .045em;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .site-nav a::after {
@@ -141,9 +142,19 @@ video {
   transition: right .24s ease;
 }
 
-.site-nav a:hover::after,
-.site-nav a[aria-current="page"]::after {
+.site-nav a:hover::after {
   right: 0;
+}
+
+.nav-home-icon {
+  display: block;
+  width: 1.1em;
+  height: 1.1em;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
 }
 
 .nav-toggle {
