@@ -1597,6 +1597,17 @@ h1 {
   }
 }
 
+/* Verdico Law page: image hero */
+.hero--law {
+  --hero-image: url("../assets/images/lawpage.avif");
+}
+
+.hero--law::before,
+.hero--contact::before {
+  animation: rs-drift 9s ease-out forwards;
+}
+
+
 /* Verdico Contact page: image hero with refined atmospheric overlay and elegant email reach. */
 .hero--contact {
   --hero-image: url("../assets/images/contactpage.avif");
