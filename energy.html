@@ -31,8 +31,8 @@
 <main>
   <section class="hero hero--page hero--visual hero--energy hero--with-video">
     <div class="hero-media" aria-hidden="true">
-      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/video/energy-wave-poster.jpg" disablepictureinpicture>
-        <source src="assets/video/energy-wave.mp4" type="video/mp4">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture>
+        <source src="assets/video/energy-page.mp4" type="video/mp4">
       </video>
     </div>
     <div class="hero-content hero-content--page">
@@ -102,26 +102,26 @@
         <h2>Where Verdi &amp; Co. is active.</h2>
         <p>Renewable power, storage and digital infrastructure across Europe, LATAM, the United States and selected APAC markets.</p>
       </header>
-      <div class="energy-globe-shell" data-reveal>
-        <div class="energy-globe-frame">
-          <div class="flourish-embed flourish-webgl" data-src="visualisation/22720361">
-            <noscript><img src="https://public.flourish.studio/visualisation/22720361/thumbnail" width="100%" alt="Operating footprint visualization" /></noscript>
+      <div class="energy-cobe-layout" data-reveal>
+        <div class="energy-cobe-stage">
+          <canvas class="energy-cobe-canvas" id="cobe-globe" aria-label="Interactive globe showing Verdi &amp; Co. operating markets" role="img"></canvas>
+        </div>
+        <div class="energy-cobe-sidebar">
+          <div class="energy-market-list" role="group" aria-label="Active markets">
+            <button type="button" class="energy-market-pill" data-energy-region="europe" aria-pressed="false">Europe</button>
+            <button type="button" class="energy-market-pill" data-energy-region="latam" aria-pressed="false">LATAM</button>
+            <button type="button" class="energy-market-pill" data-energy-region="us" aria-pressed="false">United States</button>
+            <button type="button" class="energy-market-pill" data-energy-region="apac" aria-pressed="false">APAC</button>
+            <button type="button" class="energy-market-pill" data-energy-region="mea" aria-pressed="false">MEA</button>
+            <button type="button" class="energy-market-pill" data-energy-region="poland" aria-pressed="false">Poland</button>
+            <button type="button" class="energy-market-pill" data-energy-region="france" aria-pressed="false">France</button>
+          </div>
+          <div class="energy-region-focus" aria-live="polite">
+            <span class="energy-region-focus__rubric">Active markets</span>
+            <span class="energy-region-focus__name">Select a market</span>
+            <p class="energy-region-focus__body">Tap any market to surface where Verdi &amp; Co. is presently active across renewable power, storage and digital infrastructure.</p>
           </div>
         </div>
-      </div>
-      <div class="energy-market-list" data-reveal role="group" aria-label="Active markets">
-        <button type="button" class="energy-market-pill" data-energy-region="europe" aria-pressed="false">Europe</button>
-        <button type="button" class="energy-market-pill" data-energy-region="latam" aria-pressed="false">LATAM</button>
-        <button type="button" class="energy-market-pill" data-energy-region="us" aria-pressed="false">United States</button>
-        <button type="button" class="energy-market-pill" data-energy-region="apac" aria-pressed="false">APAC</button>
-        <button type="button" class="energy-market-pill" data-energy-region="emea" aria-pressed="false">EMEA</button>
-        <button type="button" class="energy-market-pill" data-energy-region="poland" aria-pressed="false">Poland</button>
-        <button type="button" class="energy-market-pill" data-energy-region="france" aria-pressed="false">France</button>
-      </div>
-      <div class="energy-region-focus" data-reveal aria-live="polite">
-        <span class="energy-region-focus__rubric">Active markets</span>
-        <span class="energy-region-focus__name">Select a market</span>
-        <p class="energy-region-focus__body">Tap any market to surface where Verdi &amp; Co. is presently active across renewable power, storage and digital infrastructure.</p>
       </div>
     </div>
   </section>
@@ -157,7 +157,193 @@
     </nav>
   </div>
 </footer>
-<script src="https://public.flourish.studio/resources/embed.js" defer></script>
 <script src="scripts/main.js"></script>
+<script type="module">
+import createGlobe from 'https://esm.sh/cobe@0.6.3';
+
+(function init() {
+  var canvas = document.getElementById('cobe-globe');
+  if (!canvas) return;
+
+  var MARKETS = [
+    { key: 'europe', name: 'Europe',        location: [ 50.0,  10.0], focus: [  10,  8], body: 'Renewable power, storage and digital infrastructure opportunities across selected European markets.' },
+    { key: 'latam',  name: 'LATAM',         location: [-15.0, -60.0], focus: [ -60, -8], body: 'Market coverage across selected Latin American opportunities where power, infrastructure and capital alignment matter.' },
+    { key: 'us',     name: 'United States', location: [ 39.0, -98.0], focus: [ -98, 12], body: 'Renewable power, storage and digital infrastructure opportunities across selected U.S. markets.' },
+    { key: 'apac',   name: 'APAC',          location: [ 20.0, 110.0], focus: [ 110,  7], body: 'Selected APAC market coverage where digital infrastructure, energy and partner alignment intersect.' },
+    { key: 'mea',    name: 'MEA',           location: [ 32.0,  35.0], focus: [  35,  5], body: 'Core advisory corridor across power, capital and digital infrastructure across the Middle East and Africa.' },
+    { key: 'poland', name: 'Poland',        location: [ 52.0,  19.0], focus: [  19, 10], body: 'Focused activity in Poland across power-linked infrastructure, renewables, storage and data-centre related opportunities.' },
+    { key: 'france', name: 'France',        location: [ 46.2,   2.2], focus: [   2,  9], body: 'Selected French market coverage across renewable power, storage and digital infrastructure opportunities.' }
+  ];
+
+  var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- Geographic orientation helpers --- */
+
+  function locationToRotation(market) {
+    var degrees = Math.PI / 180;
+    var focus = market.focus || [market.location[1], market.location[0]];
+
+    return {
+      phi: focus[0] * degrees,
+      theta: focus[1] * degrees
+    };
+  }
+
+  function shortestAngleDelta(from, to) {
+    var d = to - from;
+    var twoPI = Math.PI * 2;
+    d = ((d % twoPI) + twoPI) % twoPI;
+    if (d > Math.PI) d -= twoPI;
+    return d;
+  }
+
+  function clampTheta(t) {
+    var limit = Math.PI / 2.8;
+    return Math.max(-limit, Math.min(limit, t));
+  }
+
+  /* --- Rotation state --- */
+
+  var currentPhi   = 0.0;
+  var currentTheta = 0.2;
+  var targetPhi    = 0.0;
+  var targetTheta  = 0.2;
+  var activeIndex  = -1;
+
+  /* --- Drag state --- */
+
+  var isDragging      = false;
+  var lastPointerX    = 0;
+  var lastPointerY    = 0;
+  var userInteracting = false;
+  var interactTimer   = null;
+
+  function buildMarkers() {
+    return MARKETS.map(function (m, i) {
+      return { location: m.location, size: i === activeIndex ? 0.08 : 0.05 };
+    });
+  }
+
+  function findIdx(key) {
+    for (var i = 0; i < MARKETS.length; i++) {
+      if (MARKETS[i].key === key) return i;
+    }
+    return -1;
+  }
+
+  function selectMarket(idx) {
+    var rot = locationToRotation(MARKETS[idx]);
+    activeIndex     = idx;
+    targetPhi       = rot.phi;
+    targetTheta     = clampTheta(rot.theta);
+    userInteracting = false;
+    if (interactTimer) { clearTimeout(interactTimer); interactTimer = null; }
+  }
+
+  /* --- Pointer drag handlers --- */
+
+  function onPointerDown(e) {
+    isDragging      = true;
+    userInteracting = true;
+    lastPointerX    = e.clientX;
+    lastPointerY    = e.clientY;
+    canvas.setPointerCapture(e.pointerId);
+    if (interactTimer) { clearTimeout(interactTimer); interactTimer = null; }
+  }
+
+  function onPointerMove(e) {
+    if (!isDragging) return;
+    var dx = e.clientX - lastPointerX;
+    var dy = e.clientY - lastPointerY;
+    lastPointerX  = e.clientX;
+    lastPointerY  = e.clientY;
+    currentPhi   += dx * 0.006;
+    currentTheta  = clampTheta(currentTheta + dy * 0.006);
+    targetPhi     = currentPhi;
+    targetTheta   = currentTheta;
+  }
+
+  function onPointerUp(e) {
+    isDragging = false;
+    try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+    interactTimer = window.setTimeout(function () {
+      userInteracting = false;
+      interactTimer   = null;
+    }, 800);
+  }
+
+  canvas.addEventListener('pointerdown',   onPointerDown);
+  canvas.addEventListener('pointermove',   onPointerMove);
+  canvas.addEventListener('pointerup',     onPointerUp);
+  canvas.addEventListener('pointercancel', onPointerUp);
+
+  /* --- Globe initialisation --- */
+
+  var dpr  = Math.min(window.devicePixelRatio || 1, 2);
+  var size = Math.max(canvas.offsetWidth || 480, 240);
+
+  createGlobe(canvas, {
+    devicePixelRatio: dpr,
+    width:  size * dpr,
+    height: size * dpr,
+    phi:    currentPhi,
+    theta:  currentTheta,
+    dark:   1,
+    diffuse: 1.2,
+    mapSamples:    16000,
+    mapBrightness: 7,
+    baseColor:   [0.12, 0.28, 0.58],
+    markerColor: [0.839, 0.682, 0.333],
+    glowColor:   [0.18, 0.38, 0.72],
+    markers: buildMarkers(),
+    onRender: function (state) {
+      state.markers = buildMarkers();
+
+      if (reducedMotion) {
+        if (activeIndex >= 0) {
+          currentPhi   = targetPhi;
+          currentTheta = targetTheta;
+        }
+        state.phi   = currentPhi;
+        state.theta = currentTheta;
+        return;
+      }
+
+      /* Idle rotation only when no market is selected and user is not interacting */
+      if (activeIndex < 0 && !userInteracting) {
+        targetPhi += 0.0012;
+      }
+
+      /* Smooth interpolation with shortest-path phi wrapping */
+      currentPhi   += shortestAngleDelta(currentPhi, targetPhi)   * 0.08;
+      currentTheta += (targetTheta - currentTheta) * 0.08;
+
+      state.phi   = currentPhi;
+      state.theta = currentTheta;
+    }
+  });
+
+  /* --- Market button wiring --- */
+
+  var buttons  = document.querySelectorAll('[data-energy-region]');
+  var panel    = document.querySelector('.energy-region-focus');
+  var rubricEl = panel && panel.querySelector('.energy-region-focus__rubric');
+  var nameEl   = panel && panel.querySelector('.energy-region-focus__name');
+  var bodyEl   = panel && panel.querySelector('.energy-region-focus__body');
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var idx = findIdx(btn.dataset.energyRegion);
+      if (idx < 0) return;
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+      btn.setAttribute('aria-pressed', 'true');
+      if (nameEl)   nameEl.textContent   = MARKETS[idx].name;
+      if (bodyEl)   bodyEl.textContent   = MARKETS[idx].body;
+      if (rubricEl) rubricEl.textContent = 'Active focus';
+      if (panel)    panel.classList.add('is-active');
+    });
+  });
+}());
+</script>
 </body>
 </html>
