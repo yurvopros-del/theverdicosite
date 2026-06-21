@@ -115,15 +115,18 @@ class GlobalTimeStrip extends HTMLElement {
   connectedCallback() {
     this.stopClock();
 
+    this.clockElements = Array.from(this.querySelectorAll("[data-global-clock]"));
     this.timeElements = Array.from(this.querySelectorAll("[data-global-time]"));
-    this.formatters = this.timeElements.map(function (element) {
-      return new Intl.DateTimeFormat("en-GB", {
-        timeZone: element.dataset.timeZone,
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      });
-    });
+    this.clockStates = this.clockElements.map((element) => ({
+      element: element,
+      hourHand: element.querySelector("[data-clock-hour-hand]"),
+      minuteHand: element.querySelector("[data-clock-minute-hand]"),
+      formatter: this.createFormatter(element.dataset.timeZone)
+    }));
+    this.timeStates = this.timeElements.map((element) => ({
+      element: element,
+      formatter: this.createFormatter(element.dataset.timeZone)
+    }));
 
     this.updateClock();
 
@@ -138,12 +141,32 @@ class GlobalTimeStrip extends HTMLElement {
     this.stopClock();
   }
 
+  createFormatter(timeZone) {
+    return new Intl.DateTimeFormat("en-GB", {
+      timeZone: timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    });
+  }
+
   updateClock() {
     var now = new Date();
 
-    this.timeElements.forEach((element, index) => {
-      element.textContent = this.formatters[index].format(now);
-      element.dateTime = now.toISOString();
+    this.clockStates.forEach(function (clock) {
+      var parts = clock.formatter.formatToParts(now);
+      var hours = Number(parts.find(function (part) { return part.type === "hour"; }).value);
+      var minutes = Number(parts.find(function (part) { return part.type === "minute"; }).value);
+      var hourAngle = ((hours % 12) * 30) + (minutes * 0.5);
+      var minuteAngle = minutes * 6;
+
+      clock.hourHand.setAttribute("transform", "rotate(" + hourAngle + " 60 60)");
+      clock.minuteHand.setAttribute("transform", "rotate(" + minuteAngle + " 60 60)");
+    });
+
+    this.timeStates.forEach(function (time) {
+      time.element.textContent = time.formatter.format(now);
+      time.element.dateTime = now.toISOString();
     });
   }
 

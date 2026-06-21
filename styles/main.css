@@ -503,14 +503,16 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(12px, 1.7vw, 20px);
+  perspective: 1200px;
 }
 
 .global-time-strip__item {
+  position: relative;
   min-width: 0;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(18px, 2vw, 26px);
   padding: clamp(19px, 2vw, 26px);
   border: 1px solid rgba(7, 23, 47, .11);
   border-radius: 18px;
@@ -518,26 +520,103 @@ h1 {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 14px 38px rgba(7, 23, 47, .055);
   backdrop-filter: blur(12px) saturate(120%);
   -webkit-backdrop-filter: blur(12px) saturate(120%);
+  transform: translate3d(0, 0, 0);
+  transform-style: preserve-3d;
+  transition:
+    transform .42s cubic-bezier(.2, .8, .2, 1),
+    box-shadow .42s cubic-bezier(.2, .8, .2, 1),
+    border-color .42s cubic-bezier(.2, .8, .2, 1),
+    background .42s cubic-bezier(.2, .8, .2, 1);
+  will-change: transform;
+}
+
+.global-time-strip__dial {
+  width: clamp(78px, 7vw, 98px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: drop-shadow(0 14px 24px rgba(7, 23, 47, .12));
+  transform: translateZ(1px);
+  transition: transform .42s cubic-bezier(.2, .8, .2, 1);
+}
+
+.global-time-strip__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  shape-rendering: geometricPrecision;
+}
+
+.global-time-strip__dial-face {
+  fill: rgba(255, 255, 255, .84);
+  stroke: rgba(7, 23, 47, .17);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.global-time-strip__tick {
+  stroke: rgba(7, 23, 47, .42);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.global-time-strip__hand {
+  stroke: var(--blue-deep);
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.global-time-strip__hand--hour {
+  stroke-width: 3.2;
+}
+
+.global-time-strip__hand--minute {
+  stroke-width: 2;
+}
+
+.global-time-strip__pin {
+  fill: var(--blue-deep);
+  stroke: rgba(255, 255, 255, .94);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.global-time-strip__meta {
+  min-width: 0;
 }
 
 .global-time-strip__city {
-  min-width: 0;
+  display: block;
   color: var(--ink-soft);
   font-family: var(--font-serif);
-  font-size: clamp(18px, 1.45vw, 23px);
+  font-size: clamp(20px, 1.55vw, 25px);
   line-height: 1.15;
 }
 
-.global-time-strip__time {
-  flex: 0 0 auto;
-  color: var(--blue-deep);
+.global-time-strip__zone {
+  display: block;
+  margin-top: 7px;
+  color: var(--ink-muted);
   font-family: var(--font-sans);
-  font-size: clamp(21px, 1.8vw, 28px);
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum" 1;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: .025em;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+.global-time-strip__sr-time {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .section-inner,
@@ -856,12 +935,25 @@ h1 {
     padding: 18px 20px;
   }
 
-  .global-time-strip__city {
-    font-size: 19px;
+  .global-time-strip__dial {
+    width: 74px;
   }
 
-  .global-time-strip__time {
-    font-size: 23px;
+  .global-time-strip__city {
+    font-size: 21px;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .global-time-strip__item:hover {
+    border-color: rgba(18, 58, 146, .22);
+    background: rgba(255, 255, 255, .88);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .96), 0 24px 52px rgba(7, 23, 47, .12);
+    transform: translate3d(0, -8px, 24px) rotateX(2deg);
+  }
+
+  .global-time-strip__item:hover .global-time-strip__dial {
+    transform: translateZ(10px);
   }
 }
 
@@ -878,6 +970,18 @@ h1 {
 
   .site-nav {
     transition: none;
+  }
+
+  .global-time-strip__item,
+  .global-time-strip__dial {
+    transition: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  .global-time-strip__item:hover,
+  .global-time-strip__item:hover .global-time-strip__dial {
+    transform: none;
   }
 }
 
