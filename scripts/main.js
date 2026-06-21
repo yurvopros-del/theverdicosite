@@ -110,6 +110,55 @@
   document.addEventListener("pointerdown", startVerdicoHeroVideos, { once: true });
 })();
 
+/* Verdico homepage global time strip: native IANA time-zone formatting. */
+class GlobalTimeStrip extends HTMLElement {
+  connectedCallback() {
+    this.stopClock();
+
+    this.timeElements = Array.from(this.querySelectorAll("[data-global-time]"));
+    this.formatters = this.timeElements.map(function (element) {
+      return new Intl.DateTimeFormat("en-GB", {
+        timeZone: element.dataset.timeZone,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+    });
+
+    this.updateClock();
+
+    var millisecondsUntilNextMinute = 60000 - (Date.now() % 60000);
+    this.minuteBoundaryTimer = window.setTimeout(() => {
+      this.updateClock();
+      this.minuteTimer = window.setInterval(() => this.updateClock(), 60000);
+    }, millisecondsUntilNextMinute);
+  }
+
+  disconnectedCallback() {
+    this.stopClock();
+  }
+
+  updateClock() {
+    var now = new Date();
+
+    this.timeElements.forEach((element, index) => {
+      element.textContent = this.formatters[index].format(now);
+      element.dateTime = now.toISOString();
+    });
+  }
+
+  stopClock() {
+    window.clearTimeout(this.minuteBoundaryTimer);
+    window.clearInterval(this.minuteTimer);
+    this.minuteBoundaryTimer = null;
+    this.minuteTimer = null;
+  }
+}
+
+if (!customElements.get("global-time-strip")) {
+  customElements.define("global-time-strip", GlobalTimeStrip);
+}
+
 /* Verdico footer LinkedIn reveal observer: production owner. */
 (() => {
   document.documentElement.classList.add("js");
