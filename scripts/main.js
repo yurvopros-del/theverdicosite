@@ -121,6 +121,7 @@ class GlobalTimeStrip extends HTMLElement {
       element: element,
       hourHand: element.querySelector("[data-clock-hour-hand]"),
       minuteHand: element.querySelector("[data-clock-minute-hand]"),
+      secondHand: element.querySelector("[data-clock-second-hand]"),
       formatter: this.createFormatter(element.dataset.timeZone)
     }));
     this.timeStates = this.timeElements.map((element) => ({
@@ -130,11 +131,11 @@ class GlobalTimeStrip extends HTMLElement {
 
     this.updateClock();
 
-    var millisecondsUntilNextMinute = 60000 - (Date.now() % 60000);
-    this.minuteBoundaryTimer = window.setTimeout(() => {
+    var millisecondsUntilNextSecond = 1000 - (Date.now() % 1000);
+    this.secondBoundaryTimer = window.setTimeout(() => {
       this.updateClock();
-      this.minuteTimer = window.setInterval(() => this.updateClock(), 60000);
-    }, millisecondsUntilNextMinute);
+      this.secondTimer = window.setInterval(() => this.updateClock(), 1000);
+    }, millisecondsUntilNextSecond);
   }
 
   disconnectedCallback() {
@@ -146,6 +147,7 @@ class GlobalTimeStrip extends HTMLElement {
       timeZone: timeZone,
       hour: "2-digit",
       minute: "2-digit",
+      second: "2-digit",
       hour12: false
     });
   }
@@ -157,11 +159,14 @@ class GlobalTimeStrip extends HTMLElement {
       var parts = clock.formatter.formatToParts(now);
       var hours = Number(parts.find(function (part) { return part.type === "hour"; }).value);
       var minutes = Number(parts.find(function (part) { return part.type === "minute"; }).value);
+      var seconds = Number(parts.find(function (part) { return part.type === "second"; }).value);
       var hourAngle = ((hours % 12) * 30) + (minutes * 0.5);
       var minuteAngle = minutes * 6;
+      var secondAngle = seconds * 6;
 
       clock.hourHand.setAttribute("transform", "rotate(" + hourAngle + " 60 60)");
       clock.minuteHand.setAttribute("transform", "rotate(" + minuteAngle + " 60 60)");
+      clock.secondHand.setAttribute("transform", "rotate(" + secondAngle + " 60 60)");
     });
 
     this.timeStates.forEach(function (time) {
@@ -171,10 +176,10 @@ class GlobalTimeStrip extends HTMLElement {
   }
 
   stopClock() {
-    window.clearTimeout(this.minuteBoundaryTimer);
-    window.clearInterval(this.minuteTimer);
-    this.minuteBoundaryTimer = null;
-    this.minuteTimer = null;
+    window.clearTimeout(this.secondBoundaryTimer);
+    window.clearInterval(this.secondTimer);
+    this.secondBoundaryTimer = null;
+    this.secondTimer = null;
   }
 }
 
